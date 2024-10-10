@@ -31,7 +31,7 @@ function calculateSHA256Hash(inputString) {
 
 
 async function main(){
-    pow_demo("crazychat")
+    pow_demo("crazycat")
 }
 
 

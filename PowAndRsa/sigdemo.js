@@ -1,6 +1,5 @@
 const crypto = require('crypto');
 
-// 生成公私钥对
 function generateKeyPair() {
   const { publicKey, privateKey } = crypto.generateKeyPairSync('rsa', {
     modulusLength: 2048, 
@@ -50,7 +49,7 @@ function sig_demo(message){
 
 
 function main(){
-    sig_demo("00000eccaeea22c5e8d5c2ab09ffec66b313ba64002a98c9093c28e2f268b04f")
+    sig_demo("0000f3dc53c2a5ffdf4351073e18b7fda680b8155c58a1d0bd8774a4bc338f2f")
 }
 
 
