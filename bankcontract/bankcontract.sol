@@ -13,11 +13,7 @@ contract Bank {
     function deposit() public payable {
         require(msg.value > 0, "You must send some ETH");
 
-        if(balances[msg.sender] == 0){
-            balances[msg.sender] = msg.value;
-        } else {
-            balances[msg.sender] += msg.value;
-        }
+        balances[msg.sender] += msg.value;
 
         updataTopbalances(msg.sender);
 
