@@ -42,7 +42,7 @@ contract NFTMarket {
 
         require(paymentToken.allowance(msg.sender, address(this)) >= listing.price, "Insufficient allowance.");
 
-        require(paymentToken.transferFrom(msg.sender, listing.seller, listing.price), "Token transfer failed.");
+        paymentToken.transferFrom(msg.sender, listing.seller, listing.price);
 
         nftContract.safeTransferFrom(address(this), msg.sender, tokenId);
 
