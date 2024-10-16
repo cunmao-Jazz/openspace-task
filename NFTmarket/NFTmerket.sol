@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/token/ERC721/IERC721.sol";
 import "@openzeppelin/contracts/token/ERC721/IERC721Receiver.sol";
 import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
-contract NFTMarket {
+contract NFTMarket is IERC721Receiver  {
     IERC20 public paymentToken;
     IERC721 public nftContract;
 
@@ -29,7 +29,7 @@ contract NFTMarket {
         require(nftContract.getApproved(tokenId) == address(this),"NFT not approved");
 
         listings[tokenId] = Listing({seller: msg.sender,price: price});
-        nftContract.transferFrom(msg.sender, address(this), tokenId);
+        nftContract.safeTransferFrom(msg.sender, address(this), tokenId);
 
         emit NFTListed(tokenId,msg.sender,price);
     }
@@ -42,7 +42,7 @@ contract NFTMarket {
 
         require(paymentToken.allowance(msg.sender, address(this)) >= listing.price, "Insufficient allowance.");
 
-        paymentToken.transferFrom(msg.sender, listing.seller, listing.price);
+        require(paymentToken.transferFrom(msg.sender, listing.seller, listing.price), "Token transfer failed.");
 
         nftContract.safeTransferFrom(address(this), msg.sender, tokenId);
 
@@ -53,13 +53,11 @@ contract NFTMarket {
     }
 
     function tokensReceived(address from, uint256 amount, uint256 tokenId) external {
-        require(msg.sender == address(paymentToken), "Invalid sender");
 
         Listing memory listing = listings[tokenId];
         require(listing.price > 0, "This NFT is not for sale.");
         require(amount >= listing.price, "Insufficient token amount sent.");
 
-        
         nftContract.safeTransferFrom(address(this), from, tokenId);
 
         paymentToken.transferFrom(from, listing.seller, listing.price);
@@ -67,5 +65,15 @@ contract NFTMarket {
         delete listings[tokenId];
 
         emit NFTPurchased(tokenId, from, listing.price);
+    }
+
+     function onERC721Received(
+        address operator,
+        address from,
+        uint256 tokenId,
+        bytes calldata data
+    ) external override returns (bytes4) {
+        // This contract accepts all ERC721 tokens
+        return this.onERC721Received.selector;
     }
 }
