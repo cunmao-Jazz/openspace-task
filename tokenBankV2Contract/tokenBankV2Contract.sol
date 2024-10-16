@@ -45,9 +45,10 @@ abstract contract TokenBank{
 }
 
 contract TokenBankV2 is TokenBank{
-    constructor(address _tokenaddress) TokenBank(_tokenaddress) {}
+    constructor(address _tokenaddress) TokenBank(_tokenaddress) {};
 
     function tokensReceived(address account, uint256 amount) external AccountVerification(account) returns (bool) {
+        require(msg.sender == address(token), "Invalid sender");
         balances[account] += amount;
         return true;
     }

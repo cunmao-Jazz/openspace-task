@@ -53,11 +53,13 @@ contract NFTMarket {
     }
 
     function tokensReceived(address from, uint256 amount, uint256 tokenId) external {
+        require(msg.sender == address(paymentToken), "Invalid sender");
 
         Listing memory listing = listings[tokenId];
         require(listing.price > 0, "This NFT is not for sale.");
         require(amount >= listing.price, "Insufficient token amount sent.");
 
+        
         nftContract.safeTransferFrom(address(this), from, tokenId);
 
         paymentToken.transferFrom(from, listing.seller, listing.price);
