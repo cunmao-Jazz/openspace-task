@@ -61,13 +61,13 @@ contract BaseERC20 {
         return true; 
     }
 
-    function transferWithCallback(address recipient, uint256 amount,uint256 tokenId) external AddressVerification(recipient) returns(bool){
+    function transferWithCallback(address recipient, uint256 amount,bytes calldata data) external AddressVerification(recipient) returns(bool){
         require(balances[msg.sender] >= amount, "ERC20: transfer amount exceeds balance");
         require(approve(recipient,amount), "approve failed");
       
        if (recipient.isContract()){
             (bool success,) = recipient.call(
-                abi.encodeWithSignature("tokensReceived(address,uint256,uint256)", msg.sender, amount,tokenId)
+                abi.encodeWithSignature("tokensReceived(address,uint256,bytes)", msg.sender, amount,data)
             );
             
             require(success, "tokensReceived call failed");

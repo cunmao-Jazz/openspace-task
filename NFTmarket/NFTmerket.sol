@@ -52,7 +52,8 @@ contract NFTMarket is IERC721Receiver  {
 
     }
 
-    function tokensReceived(address from, uint256 amount, uint256 tokenId) external {
+    function tokensReceived(address from, uint256 amount, bytes calldata data) external {
+        uint256 tokenId = abi.decode(data, (uint256));
 
         Listing memory listing = listings[tokenId];
         require(listing.price > 0, "This NFT is not for sale.");
