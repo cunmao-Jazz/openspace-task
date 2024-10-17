@@ -26,15 +26,14 @@ contract NFTMarket is IERC721Receiver  {
 
     function list(uint256 tokenId, uint256 price ) public {
         require(nftContract.ownerOf(tokenId) == msg.sender,"Not the owner");
-        require(nftContract.getApproved(tokenId) == address(this),"NFT not approved");
+        require(nftContract.isApprovedForAll(msg.sender, address(this)) || nftContract.getApproved(tokenId) == address(this), "NFT not approved");
 
         listings[tokenId] = Listing({seller: msg.sender,price: price});
-        nftContract.safeTransferFrom(msg.sender, address(this), tokenId);
-
         emit NFTListed(tokenId,msg.sender,price);
     }
 
     function buy(uint256 tokenId) external {
+
         Listing memory listing = listings[tokenId];
         require(listing.price > 0, "This NFT is not for sale.");
 
@@ -44,7 +43,7 @@ contract NFTMarket is IERC721Receiver  {
 
         require(paymentToken.transferFrom(msg.sender, listing.seller, listing.price), "Token transfer failed.");
 
-        nftContract.safeTransferFrom(address(this), msg.sender, tokenId);
+        nftContract.safeTransferFrom(listing.seller, msg.sender, tokenId);
 
         delete listings[tokenId];
 
@@ -52,16 +51,15 @@ contract NFTMarket is IERC721Receiver  {
 
     }
 
-    function tokensReceived(address from, uint256 amount, bytes calldata data) external {
-        uint256 tokenId = abi.decode(data, (uint256));
-
+    function tokensReceived(address from, uint256 amount, uint256 tokenId) external {
+        require(msg.sender == address(paymentToken), "Invalid sender");
+        
         Listing memory listing = listings[tokenId];
         require(listing.price > 0, "This NFT is not for sale.");
         require(amount >= listing.price, "Insufficient token amount sent.");
+        require(paymentToken.transferFrom(from, listing.seller, listing.price), "Token transfer failed.");
 
-        nftContract.safeTransferFrom(address(this), from, tokenId);
-
-        paymentToken.transferFrom(from, listing.seller, listing.price);
+        nftContract.safeTransferFrom(listing.seller, from, tokenId);
 
         delete listings[tokenId];
 
