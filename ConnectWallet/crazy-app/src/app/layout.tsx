@@ -5,7 +5,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 
 import { headers } from "next/headers"; // added
-import ContextProvider from '@/context'
+import ContextProvider from '../context'
 
 export const metadata: Metadata = {
   title: "AppKit Example App",
