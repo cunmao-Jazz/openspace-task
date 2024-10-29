@@ -1,4 +1,4 @@
-const { createPublicClient, http,parseAbiItem,formatUnits} = require('viem');
+const { createPublicClient, http,parseAbiItem,formatUnits} = require('./node_modules/viem');
 const { mainnet } = require('viem/chains');
 
 const transferEventAbi = 'event Transfer(address indexed from, address indexed to, uint256 value)';

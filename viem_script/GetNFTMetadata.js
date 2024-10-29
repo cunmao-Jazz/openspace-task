@@ -1,4 +1,4 @@
-const { createPublicClient, http} = require('viem');
+const { createPublicClient, http} = require('./node_modules/viem');
 const { mainnet } = require('viem/chains');
 const axios = require('axios');
 const socksProxy = require('socks-proxy-agent');
