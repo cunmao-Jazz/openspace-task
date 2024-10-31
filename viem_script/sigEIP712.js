@@ -9,24 +9,24 @@ const client = createWalletClient({
   });
   
 const domain = {
-    name: "NFTMarket",  
+    name: "cat",  
     version: "1",
     chainId: 11155111,  
     verifyingContract: "" 
 };
 
 const types = {
-    Listing: [
-        { name: "seller", type: "address" },
+    Permit: [
+        { name: "owner", type: "address" },
+        { name: "approve", type: "address" },
         { name: "tokenId", type: "uint256" },
-        { name: "price", type: "uint256" },
     ],
 };
 
 const sellerPrivateKey = ""; 
 
 const account = privateKeyToAccount(sellerPrivateKey);
-
+console.log(account.address)
 
 
 
@@ -36,11 +36,11 @@ async function signListing() {
             account,
             domain,
             types,
-            primaryType: "Listing",
+            primaryType: "Permit",
             message: {
-                seller: account.address,
-                tokenId:0,
-                price: parseUnits("0.01", 18),
+                owner: account.address,
+                approve: "",
+                tokenId: 0,
             },
         })
         
