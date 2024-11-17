@@ -20,7 +20,7 @@ function watchBlock(){
 
 }
 
-function watchUSDT(){
+function watchnillion(){
     client.watchContractEvent({
         address: usdtAddress,
         abi: abi,

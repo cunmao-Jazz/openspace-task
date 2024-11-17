@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "@flashbots/ethers-provider-bundle": "^0.6.2",
+    "dotenv": "^16.4.5",
+    "ethers": "^5.7.2"
+  },
+  "devDependencies": {
+    "@types/node": "^22.9.0"
+  }
+}
